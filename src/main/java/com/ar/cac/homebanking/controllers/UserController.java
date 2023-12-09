@@ -1,8 +1,12 @@
 package com.ar.cac.homebanking.controllers;
 
+import com.ar.cac.homebanking.exceptions.UserNotExistsException;
 import com.ar.cac.homebanking.models.dtos.UserDTO;
 import com.ar.cac.homebanking.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,33 +38,46 @@ public class UserController {
 
     // TODO: Refactorizar el método para que retorne una ResponseEntity <List<UserDTO>>
     @GetMapping(value= "/users")
-    public List<String> getUsers() {
+    public ResponseEntity<List<UserDTO>> getUsers() {
+
+        List<UserDTO> lista = service.getUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(lista);
+    }
+    /*public List<String> getUsers() {
         List<String> lista = service.getUsers();
         return lista;
-
-        // Vamos a llamar al servicio de usuarios para obtener la lista desde la base de datos
-        //return List.of("Cristian", "Martina", "Lucas");
     }
+    public List<String> getUsers() {
+        // Vamos a llamar al servicio de usuarios para obtener la lista desde la base de datos
+        return List.of("Cristian", "Martina", "Lucas");
+    }*/
 
     @GetMapping(value= "/users/{id}")
-    public void getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
 
+        return ResponseEntity.status(HttpStatus.OK).body(service.getUserById(id));
     }
 
     @PostMapping(value = "/users")
-    public void createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
+    }
+
+    @PutMapping(value = "/users/{id}")
+    public void updateAllUser(@PathVariable Long id) {
 
     }
 
-    public void updateAllUser() {
+    @PatchMapping(value = "/users/{id}")
+    public void updateUser(@PathVariable Long id) {
 
     }
 
-    public void updateUser() {
-
+    // TODO: Refactor en Exception
+    @DeleteMapping(value = "/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteUser(id));
     }
 
-    public void deleteUser() {
-
-    }
+    // Método para validar caracteres del email
 }
