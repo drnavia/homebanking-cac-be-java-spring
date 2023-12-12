@@ -2,11 +2,8 @@ package com.ar.cac.homebanking.services;
 
 import com.ar.cac.homebanking.exceptions.AccountNotExistsException;
 import com.ar.cac.homebanking.mappers.AccountMapper;
-import com.ar.cac.homebanking.mappers.UserMapper;
 import com.ar.cac.homebanking.models.Account;
-import com.ar.cac.homebanking.models.User;
 import com.ar.cac.homebanking.models.dtos.AccountDTO;
-import com.ar.cac.homebanking.models.dtos.UserDTO;
 import com.ar.cac.homebanking.models.enums.AccountType;
 import com.ar.cac.homebanking.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,7 @@ public class AccountService {
     }
 
     public AccountDTO createAccount(AccountDTO accountDto) {
+        // TODO: Refactor
         accountDto.setType(AccountType.CURRENT_ACCOUNT);
         accountDto.setAmount(BigDecimal.ZERO);
         Account accountSaved = repository.save(AccountMapper.dtoToAccount(accountDto));

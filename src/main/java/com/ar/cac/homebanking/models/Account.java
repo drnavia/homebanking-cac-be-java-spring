@@ -27,8 +27,8 @@ public class Account {
 
     private BigDecimal amount;
 
-    //@
-    //private User owner;
+    @ManyToOne
+    private User owner;
 
     //@ManyToOne
     //private List<Transfer> transfers;
