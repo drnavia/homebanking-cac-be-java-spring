@@ -27,4 +27,8 @@ public class User {
     private String surname;
 
     private String dni;
+
+    //private Date created_at;
+
+    //private Date updated_at;
 }

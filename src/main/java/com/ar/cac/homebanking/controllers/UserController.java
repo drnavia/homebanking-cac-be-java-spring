@@ -59,19 +59,19 @@ public class UserController {
     }
 
     @PostMapping(value = "/users")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(user));
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(dto));
     }
 
     @PutMapping(value = "/users/{id}")
-    public void updateAllUser(@PathVariable Long id) {
-
+    public ResponseEntity<UserDTO> updateAllUser(@PathVariable Long id, @RequestBody UserDTO dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, dto));
     }
 
-    @PatchMapping(value = "/users/{id}")
-    public void updateUser(@PathVariable Long id) {
-
-    }
+//    @PatchMapping(value = "/users/{id}")
+//    public void updateUser(@PathVariable Long id) {
+//
+//    }
 
     // TODO: Refactor en Exception
     @DeleteMapping(value = "/users/{id}")
@@ -79,5 +79,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteUser(id));
     }
 
-    // Método para validar caracteres del email
+    /*
+     * CONTROLADOR >>> CAPA DE PRESENTACIÓN
+     */
+    // Método para validar datos de entrada
+    // * Caracteres del email
+    // * Seguridad
 }

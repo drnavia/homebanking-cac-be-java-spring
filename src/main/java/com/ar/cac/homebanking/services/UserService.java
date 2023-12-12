@@ -6,8 +6,6 @@ import com.ar.cac.homebanking.models.User;
 import com.ar.cac.homebanking.models.dtos.UserDTO;
 import com.ar.cac.homebanking.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,9 +40,40 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userDto) {
+        User userValidated = validateUserByEmail(userDto);
+        if (userValidated == null) {
+            User userSaved = repository.save(UserMapper.dtoToUser(userDto));
+            return UserMapper.userToDto(userSaved);
+        } else {
+            throw new UserNotExistsException("Usuario con mail: " + userDto.getEmail() + " ya existe");
+        }
+    }
 
-        User user = repository.save(UserMapper.dtoToUser(userDto));
-        return UserMapper.userToDto(user);
+    public UserDTO updateUser(Long id, UserDTO dto) {
+        if (repository.existsById(id)) {
+            User userToModify = repository.findById(id).get();
+
+            // Validar qué datos no vienen en null para setearlos al objeto ya creado.
+            // Lógica del Patch
+            if (dto.getName() != null) {
+                userToModify.setName(dto.getName());
+            }
+            if (dto.getSurname() != null) {
+                userToModify.setSurname(dto.getSurname());
+            }
+            if (dto.getEmail() != null) {
+                userToModify.setEmail(dto.getEmail());
+            }
+            if (dto.getPassword() != null) {
+                userToModify.setPassword(dto.getPassword());
+            }
+            if (dto.getDni() != null) {
+                userToModify.setDni(dto.getDni());
+            }
+            User userModified = repository.save(userToModify);
+            return UserMapper.userToDto(userModified);
+        }
+        return null;
     }
 
     public String deleteUser(Long id) {
@@ -54,5 +83,14 @@ public class UserService {
         } else {
             throw new UserNotExistsException("El usuario a eliminar no existe");
         }
+    }
+
+    /*
+     * SERVICIO >>> CAPA DE NEGOCIO
+     */
+    // Método para validar temas del negocio:
+    // * Validar que el mail sea único por usuario
+    public User validateUserByEmail(UserDTO dto) {
+        return repository.findByEmail(dto.getEmail());
     }
 }
