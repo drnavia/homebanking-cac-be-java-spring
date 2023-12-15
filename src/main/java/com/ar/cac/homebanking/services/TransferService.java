@@ -61,14 +61,14 @@ public class TransferService {
     @Transactional
     public TransferDTO performTransfer(TransferDTO dto) {
         // Comprobar si las cuentas de origen y destino existen
-        Account originAccount = accountRepository.findById(dto.getOrigin())
-                .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + dto.getOrigin()));
-        Account destinationAccount = accountRepository.findById(dto.getTarget())
-                .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + dto.getTarget()));
+        Account originAccount = accountRepository.findById(dto.getAccount_origin())
+                .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + dto.getAccount_origin()));
+        Account destinationAccount = accountRepository.findById(dto.getAccount_target())
+                .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + dto.getAccount_target()));
 
         // Comprobar si la cuenta de origen tiene fondos suficientes
         if (originAccount.getAmount().compareTo(dto.getAmount()) < 0) {
-            throw new InsufficientFoundsException("Insufficient funds in the account with id: " + dto.getOrigin());
+            throw new InsufficientFoundsException("Insufficient funds in the account with id: " + dto.getAccount_origin());
         }
 
         // Realizar la transferencia
@@ -87,8 +87,8 @@ public class TransferService {
 
         // Seteamos el objeto fecha actual en el transferDto
         transfer.setDate(date);
-        transfer.setOrigin(originAccount.getId());
-        transfer.setTarget(destinationAccount.getId());
+        transfer.setAccount_origin(originAccount.getId());
+        transfer.setAccount_target(destinationAccount.getId());
         transfer.setAmount(dto.getAmount());
         transfer = repository.save(transfer);
 

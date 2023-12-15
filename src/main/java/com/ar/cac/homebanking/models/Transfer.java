@@ -19,11 +19,9 @@ public class Transfer {
     @Column(name = "transfer_id")
     private Long id;
 
-    private Long origin;
-
-    private Long target;
-
-    private Date date;
-
     private BigDecimal amount;
+    private Long account_origin;
+    private Long account_target;
+    @Column(name = "fecha")
+    private Date date;
 }
